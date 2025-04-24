@@ -1,0 +1,33 @@
+<%- include('header') %>
+
+<main class="container mt-4">
+    <h2>Aktualne Przetargi</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Lp.</th>
+            <th>Nazwa</th>
+            <th>Data Rozpoczęcia</th>
+            <th>Data Zakończenia</th>
+            <th>Max Cena</th>
+            <th>Opcje</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% tenders.forEach((tender, index) => { %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= tender.title %></td>
+                <td><%= new Date(tender.start_date).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                <td><%= new Date(tender.end_date).toLocaleDateString('pl-PL', { year: 'numeric', month: 'long', day: 'numeric' }) %></td>
+                <td><%= tender.max_budget %> PLN</td>
+                <td>
+                    <a class="btn btn-primary" href="/tenders/<%= tender.id %>">Zobacz szczegóły</a>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</main>
+
+<%- include('footer') %>
