@@ -16,7 +16,11 @@
         <% tenders.forEach((tender, index) => { %>
             <tr>
                 <td><%= index + 1 %></td>
-                <td><%= tender.title %></td>
+                <td>
+                    <a href="/tenders/<%= tender.id %>" style="display:block; width:100%; text-decoration:none; color: inherit;">
+                        <%= tender.title %>
+                    </a>
+                </td>
                 <td><%= new Date(tender.start_date).toLocaleString('pl-PL', {
                         year: 'numeric', month: '2-digit', day: '2-digit',
                         hour: '2-digit', minute: '2-digit'

@@ -1,7 +1,7 @@
 const tendersModel = require('../models/tenders');
 
-const getAllTenders = (req, res) => {
-    tendersModel.getAllTenders((err, tenders) => {
+const getActiveTenders = (req, res) => {
+    tendersModel.getActiveTenders((err, tenders) => {
         if (err) {
             console.error(err);
             return res.status(500).send('Błąd przy pobieraniu danych');
@@ -37,8 +37,65 @@ const addTender = (req, res) => {
     });
 };
 
+const getEndedTenders = (req, res) => {
+    tendersModel.getEndedTenders((err, tenders) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Błąd przy pobieraniu zakończonych przetargów');
+        }
+        res.render('tenders-ended', { tenders });
+    });
+};
+
+const getEndedTenderDetails = (req, res) => {
+    const tenderId = req.params.id;
+
+    tendersModel.getTenderById(tenderId, (err, tender) => {
+        if (err) return res.status(404).send('Przetarg nie znaleziony');
+
+        tendersModel.getValidOffersForTender(tenderId, tender.max_budget, (err, offers) => {
+            if (err) return res.status(500).send('Błąd przy pobieraniu ofert');
+
+            const hasValidOffer = offers.length > 0;
+            const noOffers = offers.length === 0;
+            const allOffersExceedBudget = offers.every(offer => offer.amount > tender.max_budget);
+
+            res.render('ended-tender-details', {
+                tender,
+                offers,
+                hasValidOffer,
+                noOffers,
+                allOffersExceedBudget
+            });
+        });
+    });
+};
+
+
+const submitOffer = (req, res) => {
+    const tenderId = req.params.id;
+    const { bidderName, offerAmount, offerDate } = req.body;
+
+    if (!bidderName || !offerAmount || !offerDate) {
+        return res.status(400).send('Wszystkie pola są wymagane');
+    }
+
+    tendersModel.addOffer(tenderId, bidderName, offerAmount, offerDate, (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).send('Błąd przy dodawaniu oferty');
+        }
+        res.redirect(`/tenders/${tenderId}`);
+    });
+};
+
+
+
 module.exports = {
-    getAllTenders,
+    getActiveTenders,
     getTenderDetails,
+    getEndedTenders,
+    getEndedTenderDetails,
+    submitOffer,
     addTender
 };

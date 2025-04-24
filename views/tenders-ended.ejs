@@ -1,0 +1,27 @@
+<%- include('header') %>
+
+<main class="container mt-4">
+    <h2>Zakończone Przetargi</h2>
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nazwa</th>
+            <th>Status</th>
+            <th>Szczegóły</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% tenders.forEach((tender, index) => { %>
+            <tr>
+                <td><%= index + 1 %></td>
+                <td><%= tender.title %></td>
+                <td>Zakończono zbieranie ofert</td>
+                <td><a class="btn btn-secondary" href="/tenders/ended/<%= tender.id %>">Zobacz szczegóły</a></td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+</main>
+
+<%- include('footer') %>

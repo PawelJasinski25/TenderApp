@@ -1,0 +1,63 @@
+<%- include('header') %>
+
+<main class="container mt-4">
+    <h2 class="mb-4"><%= tender.title %></h2>
+
+    <div class="tender-details">
+        <h4 class="mb-4">Opis przetargu</h4>
+        <p class="lead mb-4"><%= tender.description %></p>
+    </div>
+
+    <div class="tender-details">
+        <h4 class="mb-4">Szczegóły przetargu</h4>
+
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>Instytucja zamawiająca</th>
+                <td><%= tender.institution %></td>
+            </tr>
+            <tr>
+                <th>Budżet maksymalny</th>
+                <td><%= tender.max_budget %> PLN</td>
+            </tr>
+            <tr>
+                <th>Data rozpoczęcia</th>
+                <td><%= new Date(tender.start_date).toLocaleString('pl-PL') %></td>
+            </tr>
+            <tr>
+                <th>Data zakończenia</th>
+                <td><%= new Date(tender.end_date).toLocaleString('pl-PL') %></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <h4 class="mt-4">Oferty</h4>
+    <% if (noOffers) { %>
+        <p class="text-danger">Przetarg zakończył się bez rozstrzygnięcia – brak ofert.</p>
+    <% } else if (allOffersExceedBudget) { %>
+        <p class="text-danger">Przetarg zakończył się bez rozstrzygnięcia – wszystkie oferty przekraczały budżet.</p>
+    <% } else { %>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th>Firma</th>
+                <th>Kwota (PLN)</th>
+                <th>Data złożenia</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% offers.forEach(offer => { %>
+                <tr>
+                    <td><%= offer.bidder_name %></td>
+                    <td><%= offer.amount %></td>
+                    <td><%= new Date(offer.submitted_at).toLocaleString('pl-PL') %></td>
+                </tr>
+            <% }) %>
+            </tbody>
+        </table>
+    <% } %>
+</main>
+
+<%- include('footer') %>

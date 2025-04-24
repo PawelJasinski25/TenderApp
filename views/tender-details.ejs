@@ -36,7 +36,7 @@
     <% if (new Date() < new Date(tender.end_date)) { %>
         <div class="tender-details mt-5">
             <h4 class="mb-4">Złóż ofertę</h4>
-            <form method="POST" action="/tenders/<%= tender.id %>/submit-offer" class="uniform-form">
+            <form method="POST" action="/tenders/<%= tender.id %>/submit-offer" class="uniform-form" id="offerForm">
                 <div class="form-group">
                     <label for="bidderName">Nazwa składającego:</label>
                     <input type="text" id="bidderName" name="bidderName" class="form-control" required>
@@ -58,11 +58,20 @@
         <script>
             function updateOfferDate() {
                 const currentDate = new Date();
-                const dateString = currentDate.toLocaleString('pl-PL');
-                document.getElementById('offerDate').value = dateString;
+                const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
+
+                document.getElementById('offerDate').value = currentDate.toLocaleString('pl-PL');
+                document.getElementById('offerDate').setAttribute('data-timestamp', formattedDate);
             }
-            updateOfferDate();
+
             setInterval(updateOfferDate, 1000);
+
+            document.getElementById('offerForm').addEventListener('submit', function(event) {
+                const offerDate = document.getElementById('offerDate').getAttribute('data-timestamp');
+                document.getElementById('offerDate').value = offerDate;
+            });
+
+            updateOfferDate();
         </script>
     <% } else { %>
         <p class="text-muted mt-5"><em>Termin składania ofert minął.</em></p>
