@@ -1,18 +1,26 @@
 const db = require('./db');
 
-// Funkcja do pobierania wszystkich przetargów
 const getAllTenders = (callback) => {
     const sql = 'SELECT * FROM tenders';
-    db.query(sql, callback); // bezpośrednie przekazanie callbacka
+    db.query(sql, callback);
 };
 
-// Funkcja do dodawania nowego przetargu
-const addTender = (name, description, startDate, endDate, maxPrice, callback) => {
-    const sql = 'INSERT INTO tenders (name, description, start_date, end_date, max_price) VALUES (?, ?, ?, ?, ?)';
-    db.query(sql, [name, description, startDate, endDate, maxPrice], callback); // również przekazujemy callbacka bezpośrednio
+const getTenderById = (id, callback) => {
+    const sql = 'SELECT * FROM tenders WHERE id = ?';
+    db.query(sql, [id], (err, results) => {
+        if (err) return callback(err);
+        if (results.length === 0) return callback(new Error('Nie znaleziono przetargu'));
+        callback(null, results[0]);
+    });
+};
+
+const addTender = (title, description,institution, startDate, endDate, maxBudget, callback) => {
+    const sql = 'INSERT INTO tenders (title, description,institution, start_date, end_date, max_budget) VALUES (?, ?, ?, ?, ?,?)';
+    db.query(sql, [title, description,institution, startDate, endDate, maxBudget], callback);
 };
 
 module.exports = {
     getAllTenders,
+    getTenderById,
     addTender
 };

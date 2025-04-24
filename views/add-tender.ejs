@@ -1,0 +1,43 @@
+<%- include('header') %>
+
+<main class="container mt-4">
+    <h2 class="mb-4">Dodaj Przetarg</h2>
+
+    <div class="uniform-form">
+        <form method="POST" action="/tenders/add">
+            <div class="form-group">
+                <label for="title">Tytuł przetargu:</label>
+                <input type="text" id="title" name="title" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Opis przetargu:</label>
+                <textarea id="description" name="description" class="form-control" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="institution">Instytucja:</label>
+                <input type="text" id="institution" name="institution" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="start_date">Data rozpoczęcia:</label>
+                <input type="datetime-local" id="start_date" name="start_date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="end_date">Data zakończenia:</label>
+                <input type="datetime-local" id="end_date" name="end_date" class="form-control" required>
+            </div>
+
+            <div class="form-group">
+                <label for="max_budget">Budżet maksymalny (PLN):</label>
+                <input type="number" id="max_budget" name="max_budget" class="form-control" min="1" required>
+            </div>
+
+            <button type="submit" class="btn-submit">Dodaj przetarg</button>
+        </form>
+    </div>
+</main>
+
+<%- include('footer') %>

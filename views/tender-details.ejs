@@ -1,0 +1,72 @@
+<%- include('header') %>
+
+<main class="container mt-4">
+    <h2 class="mb-4"><%= tender.title %></h2>
+
+    <div class="tender-details">
+        <h4 class="mb-4">Opis przetargu</h4>
+        <p class="lead mb-4"><%= tender.description %></p>
+    </div>
+
+    <div class="tender-details">
+        <h4 class="mb-4">Szczegóły przetargu</h4>
+
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>Instytucja zamawiająca</th>
+                <td><%= tender.institution %></td>
+            </tr>
+            <tr>
+                <th>Budżet maksymalny</th>
+                <td><%= tender.max_budget %> PLN</td>
+            </tr>
+            <tr>
+                <th>Data rozpoczęcia</th>
+                <td><%= new Date(tender.start_date).toLocaleString('pl-PL') %></td>
+            </tr>
+            <tr>
+                <th>Data zakończenia</th>
+                <td><%= new Date(tender.end_date).toLocaleString('pl-PL') %></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <% if (new Date() < new Date(tender.end_date)) { %>
+        <div class="tender-details mt-5">
+            <h4 class="mb-4">Złóż ofertę</h4>
+            <form method="POST" action="/tenders/<%= tender.id %>/submit-offer" class="uniform-form">
+                <div class="form-group">
+                    <label for="bidderName">Nazwa składającego:</label>
+                    <input type="text" id="bidderName" name="bidderName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="offerAmount">Wartość oferty (PLN):</label>
+                    <input type="number" id="offerAmount" name="offerAmount" class="form-control" min="1" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="offerDate">Data złożenia oferty:</label>
+                    <input type="text" id="offerDate" name="offerDate" class="form-control" readonly>
+                </div>
+
+                <button type="submit" class="btn-submit">Złóż ofertę</button>
+            </form>
+        </div>
+
+        <script>
+            function updateOfferDate() {
+                const currentDate = new Date();
+                const dateString = currentDate.toLocaleString('pl-PL');
+                document.getElementById('offerDate').value = dateString;
+            }
+            updateOfferDate();
+            setInterval(updateOfferDate, 1000);
+        </script>
+    <% } else { %>
+        <p class="text-muted mt-5"><em>Termin składania ofert minął.</em></p>
+    <% } %>
+</main>
+
+<%- include('footer') %>
