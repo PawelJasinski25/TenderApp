@@ -1,7 +1,7 @@
 const db = require('./db');
 
 const getActiveTenders = (callback) => {
-    const sql = 'SELECT * FROM tenders WHERE end_date > NOW()';  // Dodajemy warunek, aby wyświetlić tylko przetargi, które nie są zakończone
+    const sql = 'SELECT * FROM tenders WHERE end_date > NOW()';
     db.query(sql, callback);
 };
 
@@ -9,14 +9,19 @@ const getTenderById = (id, callback) => {
     const sql = 'SELECT * FROM tenders WHERE id = ?';
     db.query(sql, [id], (err, results) => {
         if (err) return callback(err);
-        if (results.length === 0) return callback(new Error('Nie znaleziono przetargu'));
-        callback(null, results[0]);
+        callback(null, results[0] || null);
     });
 };
+
 
 const getEndedTenders = (callback) => {
     const sql = 'SELECT * FROM tenders WHERE end_date < NOW()';
     db.query(sql, callback);
+};
+
+const getAllOffersForTender = (tenderId, callback) => {
+    const sql = 'SELECT * FROM offers WHERE tender_id = ? ORDER BY submitted_at ASC';
+    db.query(sql, [tenderId], callback);
 };
 
 const getValidOffersForTender = (tenderId, maxBudget, callback) => {
@@ -47,6 +52,7 @@ module.exports = {
     getActiveTenders,
     getTenderById,
     getEndedTenders,
+    getAllOffersForTender,
     getValidOffersForTender,
     addTender,
     addOffer

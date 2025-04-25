@@ -1,10 +1,9 @@
 <%- include('header') %>
-
 <main class="container mt-4">
     <h2 class="mb-4">Dodaj Przetarg</h2>
 
     <div class="uniform-form">
-        <form method="POST" action="/tenders/add">
+        <form method="POST" action="/tenders/add" >
             <div class="form-group">
                 <label for="title">Tytuł przetargu:</label>
                 <input type="text" id="title" name="title" class="form-control" required>
@@ -23,11 +22,13 @@
             <div class="form-group">
                 <label for="start_date">Data rozpoczęcia:</label>
                 <input type="datetime-local" id="start_date" name="start_date" class="form-control" required>
+                <div id="start_date_error" class="error-message"></div>
             </div>
 
             <div class="form-group">
                 <label for="end_date">Data zakończenia:</label>
                 <input type="datetime-local" id="end_date" name="end_date" class="form-control" required>
+                <div id="end_date_error" class="error-message"></div>
             </div>
 
             <div class="form-group">
@@ -39,5 +40,55 @@
         </form>
     </div>
 </main>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form');
+        const start = document.getElementById('start_date');
+        const end = document.getElementById('end_date');
+
+        const errStart = document.getElementById('start_date_error');
+        const errEnd = document.getElementById('end_date_error');
+
+        function updateMinDate() {
+            const now = new Date();
+            const localNow = new Date(now.getTime() - now.getTimezoneOffset() * 60000);
+            const nowString = localNow.toISOString().slice(0, 16);
+            start.min = end.min = nowString;
+        }
+
+        updateMinDate();
+
+        start.addEventListener('input', updateMinDate);
+        end.addEventListener('input', updateMinDate);
+
+        function validate() {
+            errStart.textContent = '';
+            errEnd.textContent = '';
+
+            const s = new Date(start.value);
+            const e = new Date(end.value);
+            const nowDate = new Date();
+            nowDate.setSeconds(0, 0);
+
+            if (start.value && s < nowDate) {
+                errStart.textContent = 'Data rozpoczęcia nie może być w przeszłości';
+            }
+
+            if (end.value && e < nowDate) {
+                errEnd.textContent = 'Data zakończenia nie może być w przeszłości';
+            }
+
+            if (start.value && end.value && s > e) {
+                errStart.textContent = 'Data rozpoczęcia nie może być późniejsza niż zakończenia.';
+            }
+        }
+
+        start.addEventListener('input', validate);
+        end.addEventListener('input', validate);
+
+        form.addEventListener('submit', validate);
+    });
+</script>
 
 <%- include('footer') %>

@@ -53,23 +53,28 @@ const getEndedTenderDetails = (req, res) => {
     tendersModel.getTenderById(tenderId, (err, tender) => {
         if (err) return res.status(404).send('Przetarg nie znaleziony');
 
-        tendersModel.getValidOffersForTender(tenderId, tender.max_budget, (err, offers) => {
+        tendersModel.getAllOffersForTender(tenderId, (err, offers) => {
             if (err) return res.status(500).send('Błąd przy pobieraniu ofert');
 
-            const hasValidOffer = offers.length > 0;
-            const noOffers = offers.length === 0;
-            const allOffersExceedBudget = offers.every(offer => offer.amount > tender.max_budget);
 
-            res.render('ended-tender-details', {
-                tender,
-                offers,
-                hasValidOffer,
-                noOffers,
-                allOffersExceedBudget
+            tendersModel.getValidOffersForTender(tenderId, tender.max_budget, (err, validOffers) => {
+                if (err) return res.status(500).send('Błąd przy pobieraniu ofert');
+
+                const noOffers = offers.length === 0;
+                const allOffersExceedBudget = offers.length > 0 && validOffers.length === 0;
+
+                res.render('ended-tender-details', {
+                    tender,
+                    offers,
+                    validOffers,
+                    noOffers,
+                    allOffersExceedBudget
+                });
             });
         });
     });
 };
+
 
 
 const submitOffer = (req, res) => {
@@ -79,16 +84,29 @@ const submitOffer = (req, res) => {
     if (!bidderName || !offerAmount || !offerDate) {
         return res.status(400).send('Wszystkie pola są wymagane');
     }
-
-    tendersModel.addOffer(tenderId, bidderName, offerAmount, offerDate, (err) => {
-        if (err) {
-            console.error(err);
-            return res.status(500).send('Błąd przy dodawaniu oferty');
+    tendersModel.getTenderById(tenderId, (err, tender) => {
+        if (err || !tender) {
+            console.error(err || 'Nie znaleziono przetargu');
+            return res.status(404).send('Przetarg nie znaleziony');
         }
-        res.redirect(`/tenders/${tenderId}`);
+
+        tendersModel.addOffer(tenderId, bidderName, offerAmount, offerDate, (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).send('Błąd przy dodawaniu oferty');
+            }
+
+            res.render('confirmation', {
+                tender,
+                offer: {
+                    name: bidderName,
+                    amount: offerAmount,
+                    date: new Date(offerDate).toLocaleString('pl-PL'),
+                }
+            });
+        });
     });
 };
-
 
 
 module.exports = {

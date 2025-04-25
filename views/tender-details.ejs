@@ -23,11 +23,18 @@
             </tr>
             <tr>
                 <th>Data rozpoczęcia</th>
-                <td><%= new Date(tender.start_date).toLocaleString('pl-PL') %></td>
+                <td><%= new Date(tender.start_date).toLocaleString('pl-PL', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit'
+                    }) %></td>
             </tr>
             <tr>
                 <th>Data zakończenia</th>
-                <td><%= new Date(tender.end_date).toLocaleString('pl-PL') %></td>
+                <td><%= new Date(tender.end_date).toLocaleString('pl-PL', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit'
+                    }) %></td>
+                <td>
             </tr>
             </tbody>
         </table>
@@ -51,31 +58,51 @@
                     <input type="text" id="offerDate" name="offerDate" class="form-control" readonly>
                 </div>
 
-                <button type="submit" class="btn-submit">Złóż ofertę</button>
+                <button type="submit" class="btn-submit" id="submitOfferButton">Złóż ofertę</button>
             </form>
         </div>
 
-        <script>
-            function updateOfferDate() {
-                const currentDate = new Date();
-                const formattedDate = currentDate.toISOString().slice(0, 19).replace('T', ' ');
-
-                document.getElementById('offerDate').value = currentDate.toLocaleString('pl-PL');
-                document.getElementById('offerDate').setAttribute('data-timestamp', formattedDate);
-            }
-
-            setInterval(updateOfferDate, 1000);
-
-            document.getElementById('offerForm').addEventListener('submit', function(event) {
-                const offerDate = document.getElementById('offerDate').getAttribute('data-timestamp');
-                document.getElementById('offerDate').value = offerDate;
-            });
-
-            updateOfferDate();
-        </script>
-    <% } else { %>
+<% } else { %>
         <p class="text-muted mt-5"><em>Termin składania ofert minął.</em></p>
     <% } %>
 </main>
+
+
+<script>
+    function updateOfferDate() {
+        const now = new Date();
+        const offsetMs = now.getTimezoneOffset() * 60000;
+        const local = new Date(now.getTime() - offsetMs);
+        const formattedDate = local.toISOString().slice(0, 19).replace('T', ' ');
+
+        const offerDateInput = document.getElementById('offerDate');
+        offerDateInput.value = now.toLocaleString('pl-PL');
+        offerDateInput.setAttribute('data-timestamp', formattedDate);
+
+        const tenderEndDate = new Date('<%= tender.end_date %>');
+        const submitButton = document.getElementById('submitOfferButton');
+        const closedMessage = document.getElementById('offerClosedMessage');
+
+        if (now >= tenderEndDate) {
+            submitButton.disabled = true;
+            submitButton.classList.add('btn-disabled');
+            if (closedMessage) closedMessage.style.display = 'block';
+        } else {
+            submitButton.disabled = false;
+            submitButton.classList.remove('btn-disabled');
+            if (closedMessage) closedMessage.style.display = 'none';
+        }
+    }
+
+    setInterval(updateOfferDate, 1000);
+
+    document.getElementById('offerForm').addEventListener('submit', function () {
+        const offerDate = document.getElementById('offerDate').getAttribute('data-timestamp');
+        document.getElementById('offerDate').value = offerDate;
+    });
+
+    updateOfferDate();
+</script>
+
 
 <%- include('footer') %>

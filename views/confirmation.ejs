@@ -1,0 +1,28 @@
+<%- include('header') %>
+
+<main class="container mt-4">
+    <h2 class="mb-4">Dziękujemy za złożenie oferty!</h2>
+
+    <div class="tender-details">
+        <h4 class="mb-4">Szczegóły Twojej oferty:</h4>
+
+        <table class="table table-bordered">
+            <tbody>
+            <tr>
+                <th>Nazwa składającego</th>
+                <td><%= offer.name %></td>
+            </tr>
+            <tr>
+                <th>Kwota oferty</th>
+                <td><%= offer.amount %> PLN</td>
+            </tr>
+            <tr>
+                <th>Data złożenia
+                <td><%= offer.date %></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+
+<%- include('footer') %>
