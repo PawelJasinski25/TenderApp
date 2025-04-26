@@ -39,32 +39,34 @@
         </table>
     </div>
 
-    <h4 class="mt-4">Oferty</h4>
+    <div class="tender-details">
+        <h4 class="mt-4">Oferty</h4>
 
-    <% if (noOffers) { %>
-        <p class="text-danger">Przetarg zakończył się bez rozstrzygnięcia – brak ofert.</p>
-    <% } else if (allOffersExceedBudget) { %>
-        <p class="text-danger">Przetarg zakończył się bez rozstrzygnięcia – wszystkie oferty przekraczały budżet.</p>
-    <% } else { %>
-        <table class="table table-bordered">
-            <thead>
-            <tr>
-                <th>Firma</th>
-                <th>Kwota (PLN)</th>
-                <th>Data złożenia</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% offers.forEach(offer => { %>
+        <% if (noOffers) { %>
+            <p class="text-danger">Przetarg zakończył się bez rozstrzygnięcia – brak ofert.</p>
+        <% } else if (allOffersExceedBudget) { %>
+            <p class="text-danger">Przetarg zakończył się bez rozstrzygnięcia – wszystkie oferty przekraczały budżet.</p>
+        <% } else { %>
+            <table class="table table-bordered">
+                <thead>
                 <tr>
-                    <td><%= offer.bidder_name %></td>
-                    <td><%= offer.amount %></td>
-                    <td><%= new Date(offer.submitted_at).toLocaleString('pl-PL') %></td>
+                    <th>Firma</th>
+                    <th>Kwota (PLN)</th>
+                    <th>Data złożenia</th>
                 </tr>
-            <% }) %>
-            </tbody>
-        </table>
-    <% } %>
+                </thead>
+                <tbody>
+                <% validOffers.forEach(offer => { %>
+                    <tr>
+                        <td><%= offer.bidder_name %></td>
+                        <td><%= offer.amount %></td>
+                        <td><%= new Date(offer.submitted_at).toLocaleString('pl-PL') %></td>
+                    </tr>
+                <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
 </main>
 
 <%- include('footer') %>

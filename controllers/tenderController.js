@@ -6,7 +6,6 @@ const getActiveTenders = (req, res) => {
             console.error(err);
             return res.status(500).send('Błąd przy pobieraniu danych');
         }
-        console.log(tenders);
         res.render('tenders', { tenders });
     });
 };

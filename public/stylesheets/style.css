@@ -69,7 +69,6 @@ h1, h2 {
   font-weight: 600;
 }
 
-/* Tabela */
 table {
   width: 100%;
   margin-top: 20px;
@@ -90,7 +89,7 @@ th, td {
 }
 
 th {
-  background-color: #343a40;
+  background-color: #113d69;
   color: white;
 }
 
@@ -104,7 +103,6 @@ tbody tr:hover {
   background-color: #f0f0f0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
-
 
 .btn {
   margin-right: 5px;
@@ -152,7 +150,6 @@ footer {
   margin-bottom: 10px;
 }
 
-/* Style formularzy */
 .form-container {
   background-color: #ffffff;
   padding: 20px;
@@ -210,10 +207,9 @@ footer {
   background-color: #0056b3;
 }
 
-
 input[type="datetime-local"] {
   position: relative;
-  cursor: pointer; /* sygnalizuje, że można kliknąć */
+  cursor: pointer;
 }
 
 input[type="datetime-local"]::-webkit-calendar-picker-indicator {
@@ -246,4 +242,8 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator {
 
 .text-danger{
   font-style: italic;
+}
+
+textarea {
+  resize: none;
 }

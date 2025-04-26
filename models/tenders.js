@@ -1,9 +1,10 @@
 const db = require('./db');
 
 const getActiveTenders = (callback) => {
-    const sql = 'SELECT * FROM tenders WHERE end_date > NOW()';
+    const sql = 'SELECT * FROM tenders WHERE start_date <= NOW() AND end_date > NOW()';
     db.query(sql, callback);
 };
+
 
 const getTenderById = (id, callback) => {
     const sql = 'SELECT * FROM tenders WHERE id = ?';

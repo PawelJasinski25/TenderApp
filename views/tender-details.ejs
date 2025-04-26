@@ -34,14 +34,13 @@
                         year: 'numeric', month: '2-digit', day: '2-digit',
                         hour: '2-digit', minute: '2-digit'
                     }) %></td>
-                <td>
             </tr>
             </tbody>
         </table>
     </div>
 
     <% if (new Date() < new Date(tender.end_date)) { %>
-        <div class="tender-details mt-5">
+        <div class="tender-details">
             <h4 class="mb-4">Złóż ofertę</h4>
             <form method="POST" action="/tenders/<%= tender.id %>/submit-offer" class="uniform-form" id="offerForm">
                 <div class="form-group">
@@ -66,7 +65,6 @@
         <p class="text-muted mt-5"><em>Termin składania ofert minął.</em></p>
     <% } %>
 </main>
-
 
 <script>
     function updateOfferDate() {
@@ -103,6 +101,5 @@
 
     updateOfferDate();
 </script>
-
 
 <%- include('footer') %>
