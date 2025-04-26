@@ -46,7 +46,7 @@ cd TenderApp
     DB_HOST=localhost
     DB_USER=nazwa_uzytkownika
     DB_PASSWORD=haslo_uzytkownika
-    DB_NAME=tenderapp
+    DB_DATABASE=tenderapp
     ```
 
 ### 3. Zainstaluj zależności
